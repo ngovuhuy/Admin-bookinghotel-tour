@@ -8,7 +8,21 @@ import ButtonComponent from "./components/ButtonComponent/page";
 import productService from "./services/productService";
 import useSWR from "swr";
 export default function Home() {
-  // const [tableData, setTableData] = useState([
+ 
+  return (
+    <>
+    <div>
+      
+            
+            
+    </div>
+    </>
+    
+  );
+}
+
+
+ // const [tableData, setTableData] = useState([
   //   ["Nguyen van1", "Doe", "25", "ksadfj"],
   //   ["Nguyen van2", "Doe", "25", "ksadfj"],
   //   ["Nguyen van3", "Doe", "25", "ksadfj"],
@@ -22,36 +36,32 @@ export default function Home() {
   //   ["Nguyen van5", "Doe", "25", "ksadfj"],
   //   ["Nguyen van5", "Doe", "25", "ksadfj"],
   // ]);
-  const handleEdit = (data:any) => {
-    console.log(data);
-  };
-  const handleDelete = (data:any) => {
-    console.log(data);
-  };
-  const handleDetails = (data:any) => {
-    console.log(data);
-  };
-  // const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
-  // const [product, setProduct] = useState<IProduct | null>(null);
-  // const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
-  // const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  const { data, error, isLoading } = useSWR("productList", productService.getProductList); // Sử dụng useSWR và gọi getProductList từ service
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  console.log(data);
-  if (!data) {
-    return <div>No data available</div>;
-  }
+  // const handleEdit = (data:any) => {
+  //   console.log(data);
+  // };
+  // const handleDelete = (data:any) => {
+  //   console.log(data);
+  // };
+  // const handleDetails = (data:any) => {
+  //   console.log(data);
+  // };
+  // // const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
+  // // const [product, setProduct] = useState<IProduct | null>(null);
+  // // const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
+  // // const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
+  // const { data, error, isLoading } = useSWR("productList", productService.getProductList); // Sử dụng useSWR và gọi getProductList từ service
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
+  // console.log(data);
+  // if (!data) {
+  //   return <div>No data available</div>;
+  // }
   
-  const data3 = data.map(
-    (item) =>  [item.id.toString(), item.productName.toString(), item.quantity.toString(), item.categoryId.toString(), item.category.categoryName]
-  )
-  
-  return (
-    <>
-    <div>
-      <TableComponent
+  // const data3 = data.map(
+  //   (item) =>  [item.id.toString(), item.productName.toString(), item.quantity.toString(), item.categoryId.toString(), item.category.categoryName]
+  // )
+  {/* <TableComponent
               header={["Product Name", "Quantity", "CateId", "Cate"]}
               data={data3}
               onEdit={handleEdit}
@@ -60,12 +70,4 @@ export default function Home() {
               className="mt-4"
               itemsPerPage={5}
               isOrdered={false}
-            />
-            
-    </div>
-    </>
-    
-  );
-}
-
-
+            /> */}

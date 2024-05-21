@@ -1,0 +1,49 @@
+/* CSS cho modal */
+.modal {
+    display: none; /* Mặc định ẩn modal */
+    position: fixed; /* Cố định modal */
+    top: 50%; /* Chuyển modal đến giữa theo chiều dọc */
+    left: 50%; /* Chuyển modal đến giữa theo chiều ngang */
+    transform: translate(-50%, -50%); /* Đảm bảo modal được căn giữa màn hình */
+  
+    padding: 20px; /* Khoảng cách bên trong modal */
+    z-index: 9999; /* Đảm bảo modal hiển thị trên tất cả các phần khác */
+    border-radius: 8px; /* Bo tròn các góc của modal */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho modal */
+  }
+  
+  /* CSS cho nền mờ */
+  .overlay {
+    display: none; /* Mặc định ẩn nền mờ */
+    position: fixed; /* Cố định nền mờ */
+    top: 0; /* Phần đầu trang */
+    left: 0; /* Phần bên trái của trang */
+    width: 100%; /* Chiều rộng bằng toàn bộ trang */
+    height: 100%; /* Chiều cao bằng toàn bộ trang */
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ (màu đen với độ trong suốt 0.5) */
+    z-index: 9998; /* Đảm bảo nền mờ hiển thị dưới modal nhưng trên tất cả các phần khác */
+  }
+  
+  /* CSS cho nền mờ khi modal được hiển thị */
+  .overlay.active {
+    display: block; /* Hiển thị nền mờ */
+  }
+  .button-kichhoat{
+    display: flex;
+    justify-content: end;
+  }
+.button-exit{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    padding: 2px 26px;
+    border-radius: 9px;
+    color: #1F1C17;
+}  
+.button-yes{
+    font-weight: bold;
+    border: 1px solid #ccc;
+    padding: 2px 26px;
+    border-radius: 9px;
+    color: #FFFFFF;
+    background: #B8101A;
+}  

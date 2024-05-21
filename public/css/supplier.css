@@ -1,0 +1,207 @@
+.bg-background {
+    display: none;
+}
+.bg-neutral-800{
+    display: none;
+}
+.nav-supllier{
+  background: #1F1C17;
+  position: absolute;
+  top: 0;
+  min-height: 100%;
+
+}
+.nav-i-hover:hover{
+
+    background: #305A61;
+   
+    border-radius: 18px;
+   
+
+
+}
+.highlight {
+    background: #305A61;
+    border-radius: 18px;
+  }
+  .active-link {
+    background: #305A61;
+    border-radius: 18px;
+  }
+.fix-border{
+    border: 1px solid rgba(217, 217, 217, 1);
+   
+    box-shadow: 0px 6px 4px 0px rgba(0, 0, 0, 0.25);
+   
+}
+.mobi-supplier{
+    display: none;
+}
+.nav-supllier-mobi{
+    display: none;
+}
+
+    .table-hotel{
+        position: absolute;
+        top: 200px;
+        width: 71%;
+        left: 400px;
+    }
+.search-add{
+    position: absolute;
+    left: 396px;
+    top: 145px;
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.input-hotel{
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 4px 0;
+    padding-right: 72px;
+    padding-left: 22px;
+    background: #F6F6F6;
+}
+.search-hotel img{
+    margin-left: -32px;
+    cursor: pointer;
+}
+.button-add{
+    background: #305A61;
+    color: #ffffff;
+   
+    padding: 6px 12px;
+    border-radius: 12px;
+}
+.verifile{
+
+    height: 135px;
+}
+.overlay {
+
+    display: none; /* Ban đầu ẩn overlay */
+  }
+  .nav-supllier .active {
+    background-color: #fff; /* Màu nền bạn muốn sử dụng */
+    color: #000; /* Màu chữ bạn muốn sử dụng */
+  }
+  
+  .nav-supllier .active span {
+    color: #000; /* Màu chữ bạn muốn sử dụng */
+  }
+  .mleft-40{
+    margin-left: 40px;
+  }
+  .none-hotel{
+    display: none;
+  }
+  .menu-container:hover .none-hotel {
+    display: block;
+  }
+  .pc-none{
+    display: none;
+  }
+  .mlert-23{
+    margin-left: 23rem;
+  }
+@media all and (max-width: 1024px) {
+    .pc-none{
+        display: block;
+      }
+    .table-hotel{
+       
+        left: 100px;
+    }
+    .nav-supllier {
+        transition: margin-left .3s ease-in-out,width .3s ease-in-out;
+        margin-left: -400px;
+        
+        
+    }
+    .nav-supllier-mobi{
+        background: #1F1C17;
+        position: absolute;
+        top: 0;
+        min-height: 100%;
+      right: 0;
+      display: block;
+      z-index: 10000;
+      }
+    .fix-border {
+        transition: margin-left .3s ease-in-out,width .3s ease-in-out;
+        margin-left: 0;
+        
+    }
+    .mobi-supplier{
+        display: block;
+    }
+    .times-close{
+        color: #ffff;
+        font-size: 37px;
+        position: absolute;
+        right: 20px;
+        top: 62px;
+        cursor: pointer;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền với độ mờ */
+        z-index: 1; /* Đảm bảo overlay được hiển thị trên các phần tử khác */
+        display: none; /* Ban đầu ẩn overlay */
+      }
+      
+      .overlay.show {
+        display: block; /* Hiển thị overlay khi được kích hoạt */
+      }
+      .search-add{
+      
+        left: 0;
+    
+    }
+}
+@media all and (max-width: 768px) {
+    .search-add{
+      
+        left: 100px;
+    
+    }
+}
+@media all and (max-width: 678px) {
+    .button-add{
+      font-size: 12px;
+      margin-left: 0;
+      margin-top: 12px;
+      float: right;
+    }
+    .input-hotel {
+        background: #F6F6F6;
+        padding: 4px 0;
+        padding-right: 13px;
+        padding-left: 9px;
+ 
+    }
+  .search-add{
+    display: block;
+  }
+}
+
+@media all and (max-width: 500px) {
+    .table-hotel {
+        left: 50px;
+    }
+    .ml-4rem{
+        margin-left: 4rem;
+    }
+}
+@media all and (max-width: 350px) {
+.search-hotel{
+  margin-left: -42px;
+}
+}
