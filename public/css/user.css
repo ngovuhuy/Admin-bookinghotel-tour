@@ -47,3 +47,16 @@
     color: #FFFFFF;
     background: #B8101A;
 }  
+.bg-ccc{
+  background-color: #ccc;
+}
+.ptop-100px{
+  padding-top: 100px !important;
+}
+.active{
+  color: #ffffff;
+  background: #305A61;
+  border: 1px solid #ccc;
+  padding: 0px 8px;
+  border-radius: 12px;
+  }

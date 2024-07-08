@@ -20,6 +20,19 @@
 
 
 }
+.active{
+  color: #ffffff;
+  background: #305A61;
+  border: 1px solid #ccc;
+  padding: 0px 8px;
+  border-radius: 12px;
+  }
+.bg-ccc{
+  background-color: #ccc;
+}
+.ptop-100px{
+  padding-top: 100px !important;
+}
 .highlight {
     background: #305A61;
     border-radius: 18px;

@@ -1,9 +1,7 @@
 // my-new-page.js
 'use client'
-import ConfirmationModal from '@/app/components/Users/ConfirmationModal';
+
 import React, { useState } from 'react'
-import Table from '../../../../node_modules/react-bootstrap/esm/Table';
-import useSWR, { mutate } from '../../../../node_modules/swr/dist/core/index';
 import { toast } from 'react-toastify';
 import '../../../../public/css/user.css'
 import { revalidateSupplier, toggleSupplierStatus, useSuppliers } from '@/app/services/supplierService';
@@ -16,14 +14,24 @@ const fetcher = async (url: string) => {
 
 const MyNewPage = () => {
   const [showPopup, setShowPopup] = useState(false); 
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null); 
+  const [selectedSupplier, setSelectedSupplier] = useState<ISupplier | null>(null);
   const [showSupplierCreate, setShowSuplierCreate] = useState<boolean>(false);
   const { suppliers, error } = useSuppliers();
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [suppliersPerPages] = useState(5);
   if (error) return <div>Failed to load</div>;
   if (!suppliers) return <div>Loading...</div>;
+
+  const indexOfLastSupplier = currentPage * suppliersPerPages;
+  const indexOfFirstSupplier = indexOfLastSupplier - suppliersPerPages;
+  const currentSuppliers = suppliers.slice(indexOfFirstSupplier,indexOfLastSupplier);
+
+  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
+  const totalPages = Math.ceil(suppliers.length / suppliersPerPages);
   // Function để mở modal
-  const handleImageClick = () => {
+  const handleImageClick = (supplier: ISupplier) => {
+    setSelectedSupplier(supplier);
     setShowPopup(true);
   };
 
@@ -41,6 +49,17 @@ const MyNewPage = () => {
       setLoading(false);
     }
   };
+
+  const handlePrevPage = () => {
+    if(currentPage > 1){
+      setCurrentPage(currentPage - 1);
+    }
+  }
+  const handleNextPage = () => {
+    if(currentPage < totalPages){
+      setCurrentPage(currentPage + 1);
+    }
+  }
   return (
     <div className='relative'>
       <div className="search-add ">
@@ -62,13 +81,11 @@ const MyNewPage = () => {
           className="min-w-full text-start text-sm font-light text-surface dark:text-white">
           <thead
             className="border-b border-neutral-200 font-medium dark:border-white/10">
-            <tr className='text-center'>
+            <tr className='text-center bg-ccc'>
               <th scope="col" className="px-6 py-4">SupplierID</th>
               <th scope="col" className="px-6 py-4">SupplierName</th>
               <th scope="col" className="px-6 py-4">Email</th>
               <th scope="col" className="px-6 py-4">Phone</th>
-              <th scope="col" className="px-6 py-4">Address</th>
-              <th scope="col" className="px-6 py-4">Password</th>
               <th scope="col" className="px-6 py-4">Status</th>
               <th scope="col" className="px-6 py-4">IsVerify</th>
               <th scope="col" className="px-6 py-4">RoleID</th>
@@ -76,26 +93,24 @@ const MyNewPage = () => {
             </tr>
           </thead>
           <tbody>
-            {suppliers.map((item: ISupplier) => (
-            <tr key={item.supplierId} className="border-b border-neutral-200 dark:border-white/10 text-center">
+            {currentSuppliers.map((item: ISupplier) => (
+            <tr key={item.supplierId} className="border-b border-neutral-200 dark:border-white/10 text-center font-semibold">
               <td className="whitespace-nowrap px-6 py-4 font-medium">{item.supplierId}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.supplierName}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.email}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.phone}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.address}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.password}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.status ? "True" : "False"}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.isVerify ? "True" : "False"}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.roleId}</td>
               <td className="whitespace-nowrap px-6 py-4 flex">
               <img
-  // onClick={() => toggleStatus(item.userId)}
-  onClick={handleImageClick}
+
+  onClick={() => handleImageClick(item)}
   className='w-4 h-4 cursor-pointer ml-2'
   src={item.status ? "/image/unban.png" : "/image/ban.png"}
   alt={item.status ? "Ban" : "Unban"}
 />
-{showPopup && (
+{showPopup && selectedSupplier?.supplierId == item.supplierId && (
         <div className="fixed inset-0 z-10 flex items-center justify-center ">
           {/* Nền mờ */}
           <div className="fixed inset-0 bg-black opacity-50"></div>
@@ -119,6 +134,24 @@ const MyNewPage = () => {
         ))}
 </tbody>
         </table>
+        <div className="pagination mt-4 flex justify-between items-center font-semibold">
+                  <div>
+                    <span className="ml-8">{currentPage} of {totalPages}</span>
+                  </div>
+                  <div className="flex items-center mr-8">
+                    <img className="w-3 h-3 cursor-pointer" src="/image/left.png" alt="Previous" onClick={handlePrevPage} />
+                    {Array.from({ length: totalPages }, (_, index) => (
+                      <p
+                        key={index}
+                        onClick={() => paginate(index + 1)}
+                        className={`mb-0 mx-2 cursor-pointer ${currentPage === index + 1 ? 'active' : ''}`}
+                      >
+                        {index + 1}
+                      </p>
+                    ))}
+                    <img className="w-3 h-3 cursor-pointer" src="/image/right2.png" alt="Next" onClick={handleNextPage} />
+                  </div>
+                </div>
       </div>
     </div>
   </div>

@@ -38,6 +38,7 @@ function CreateRole(props: Iprops) {
         }
         handleCloseModal();
         revalidateRoles();
+        console.log(revalidateRoles);
       } catch (error) {
         toast.error("Failed to create role");
         console.error(error);

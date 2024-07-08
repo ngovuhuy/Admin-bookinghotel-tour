@@ -1,4 +1,6 @@
 import useSWR, { mutate } from 'swr';
+import { BASE_URL } from './hotelService';
+
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -6,18 +8,18 @@ const fetcher = async (url: string) => {
 };
 
 export const useServices = () => {
-  const { data, error } = useSWR('https://localhost:7132/getServices', fetcher);
+  const { data, error } = useSWR(`${BASE_URL}/getServices`, fetcher);
   return { services: data, error };
 };
 
 export const createService = async (serviceName: string, serviceDescription: string, serviceImage: string) => {
-  const response = await fetch('https://localhost:7132/createService', {
+  const response = await fetch(`${BASE_URL}/createService`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ serviceName, serviceDescription,serviceImage })
+    body: JSON.stringify({ serviceName, serviceDescription, serviceImage })
   });
 
   if (!response.ok) {
@@ -31,14 +33,15 @@ export const createService = async (serviceName: string, serviceDescription: str
     return response.text(); // Handle non-JSON response
   }
 };
+
 export const updateService = async (serviceId: number, serviceName: string, serviceDescription: string, serviceImage: string) => {
-  const response = await fetch('https://localhost:7132/updateService', {
+  const response = await fetch(`${BASE_URL}/updateService`, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ serviceId, serviceName, serviceDescription, serviceImage})
+    body: JSON.stringify({ serviceId, serviceName, serviceDescription, serviceImage })
   });
 
   if (!response.ok) {
@@ -54,7 +57,7 @@ export const updateService = async (serviceId: number, serviceName: string, serv
 };
 
 export const deleteService = async (serviceId: number) => {
-  const response = await fetch(`https://localhost:7132/deleteService/${serviceId}`, {
+  const response = await fetch(`${BASE_URL}/deleteService/${serviceId}`, {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json, text/plain, */*',
@@ -73,5 +76,6 @@ export const deleteService = async (serviceId: number) => {
     return response.text(); // Handle non-JSON response
   }
 };
+
 // Function to trigger the data revalidation
-export const revalidateServices = () => mutate('https://localhost:7132/getServices');
+export const revalidateServices = () => mutate(`${BASE_URL}/getServices`);

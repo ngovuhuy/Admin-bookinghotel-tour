@@ -1,12 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 'use client'
 
-import Image from "next/image";
-import TableComponent from "./components/TableComponent/page"
-import { useState } from "react";
-import ButtonComponent from "./components/ButtonComponent/page";
-import productService from "./services/productService";
-import useSWR from "swr";
+
 export default function Home() {
  
   return (

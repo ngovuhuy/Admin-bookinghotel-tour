@@ -62,6 +62,7 @@ function CreateSupplier(props: Iprops) {
         }
         handleCloseModal();
         revalidateSupplier();
+        console.log(revalidateSupplier);
       } catch (error) {
         toast.error("Failed to create supplier");
         console.error(error);
@@ -80,34 +81,34 @@ function CreateSupplier(props: Iprops) {
    }
   return (
     <>
-      <Modal className='pt-36' show={showSupplierCreate} onHide={() => handleCloseModal()} size='lg'>
+      <Modal className='ptop-100px' show={showSupplierCreate} onHide={() => handleCloseModal()} size='lg'>
         <Modal.Header closeButton>
           <Modal.Title>Add New</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>
-     <div className="">
-     <Form.Group className="mb-3 " controlId="exampleForm.ControlInput1" >
+     <div className="row">
+     <Form.Group className="mb-3 col-6 " controlId="exampleForm.ControlInput1" >
         <Form.Label>Supplier Name</Form.Label>
         <Form.Control type="text" placeholder="Please enter user name !!!" value={supplierName} onChange={(e:any) => setSupplierName(e.target.value)}/>
       </Form.Group>
-      <Form.Group className="mb-3 " controlId="exampleForm.ControlInput1">
+      <Form.Group className="mb-3 col-6 " controlId="exampleForm.ControlInput1">
         <Form.Label>Email</Form.Label>
         <Form.Control type="email" placeholder="Please enter email !!!" value={email} onChange={(e:any) => SetEmail(e.target.value)} />
       </Form.Group>
-      <Form.Group className="mb-3 " controlId="exampleForm.ControlInput1">
+      <Form.Group className="mb-3 col-6 " controlId="exampleForm.ControlInput1">
         <Form.Label>Phone</Form.Label>
         <Form.Control type="email" placeholder="Please enter phone !!!" value={phone} onChange={(e:any) => SetPhone(e.target.value)} />
       </Form.Group>
-      <Form.Group className="mb-3 " controlId="exampleForm.ControlInput1">
+      <Form.Group className="mb-3 col-6 " controlId="exampleForm.ControlInput1">
         <Form.Label>Address</Form.Label>
         <Form.Control type="email" placeholder="Please enter address !!!" value={address} onChange={(e:any) => SetAddress(e.target.value)} />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+      <Form.Group className="mb-3 col-6" controlId="exampleForm.ControlInput1">
         <Form.Label>Password</Form.Label>
         <Form.Control type="email" placeholder="Please enter password !!!" value={password} onChange={(e:any) => SetPassword(e.target.value)} />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlSelect1">
+      <Form.Group className="mb-3 col-6" controlId="exampleForm.ControlSelect1">
   <Form.Label>Role</Form.Label>
   <Form.Select aria-label="Select product category" value={roleId} onChange={handleRoleChange}>
   <option value="">Please choose role!</option>

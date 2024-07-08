@@ -1,22 +1,25 @@
-import { mutate } from "swr";
+// apiService.js
+import { mutate } from 'swr';
+
+const BASE_URL = "https://trekbookingapi.azurewebsites.net";
+
 interface IHotelService {
   getHotelList(): Promise<any[]>;
   // Other methods if needed
 }
 
 const hotelService: IHotelService = {
-    
   async getHotelList() {
     try {
-      const response = await fetch("https://localhost:7132/getHotels");
+      const response = await fetch(`${BASE_URL}/getHotels`);
       if (!response.ok) {
         throw new Error("Failed to fetch hotel list");
       }
       const data = await response.json();
-      await mutate("https://localhost:7132/getHotels");
+      await mutate(`${BASE_URL}/getHotels`);
       return data;
     } catch (error) {
-      console.error("Error fetching product list:", error);
+      console.error("Error fetching hotel list:", error);
       throw error;
     }
   },
@@ -24,4 +27,4 @@ const hotelService: IHotelService = {
 };
 
 export default hotelService;
-
+export { BASE_URL };

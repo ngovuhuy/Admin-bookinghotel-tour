@@ -5,8 +5,6 @@ import DeleteRole from '@/app/components/Roles/DeleteRole';
 import UpdateRole from '@/app/components/Roles/UpdateRole';
 import { useRoles } from '@/app/services/roleService';
 import React, { useState } from 'react'
-import Table from '../../../../node_modules/react-bootstrap/esm/Table';
-import useSWR from '../../../../node_modules/swr/dist/core/index';
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -44,19 +42,21 @@ const MyNewPage = () => {
           className="min-w-full text-start text-sm font-light text-surface dark:text-white">
           <thead
             className="border-b border-neutral-200 font-medium dark:border-white/10">
-            <tr className='text-center'>
+            <tr className='text-center bg-ccc'>
               <th scope="col" className="px-6 py-4">RoleID</th>
               <th scope="col" className="px-6 py-4">RoleName</th>
               <th scope="col" className="px-6 py-4">RoleDescription</th>
+              <th scope="col" className="px-6 py-4">Action</th>
+
             </tr>
           </thead>
           <tbody>
             {roles.map((item: IRole) => (
-            <tr key={item.roleId} className="border-b border-neutral-200 dark:border-white/10 text-center">
+            <tr key={item.roleId} className="border-b border-neutral-200 dark:border-white/10 text-center font-semibold">
               <td className="whitespace-nowrap px-6 py-4 font-medium">{item.roleId}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.roleName}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.roleDescription}</td>
-              <td className="whitespace-nowrap px-6 py-4 flex">
+              <td className="whitespace-nowrap px-6 py-4 flex justify-center">
               <img onClick={() => {setRole(item); setShowModalUpdate(true);}} className='w-5 h-5 cursor-pointer' src="/image/pen.png" alt="" />
             <img onClick={() =>{setRole(item); setShow(true)}} className='w-5 h-5 cursor-pointer ml-3' src="/image/trash.png" alt="" />
               </td>
