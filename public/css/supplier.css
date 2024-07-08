@@ -6,9 +6,18 @@
 }
 .nav-supllier{
   background: #1F1C17;
-  position: absolute;
+  position: fixed;
   top: 0;
   min-height: 100%;
+
+}
+.color-active{
+  color: #24CD7C;
+  font-weight: bold;
+}
+.color-stop{
+  color: #F10B34;
+  font-weight: bold;
 
 }
 .nav-i-hover:hover{

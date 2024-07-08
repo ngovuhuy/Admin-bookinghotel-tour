@@ -16,7 +16,7 @@ export const useSuppliers = () => {
 
 export const toggleSupplierStatus = async (supplierId: number): Promise<void> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/SupplierAPI/ToggleSupplier`, {
+    const response = await fetch(`${BASE_URL}/toggleSupplierStatus`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain, */*',

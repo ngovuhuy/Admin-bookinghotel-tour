@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // my-new-page.js
 'use client'
 import CreateRole from '@/app/components/Roles/CreateRole';
@@ -57,8 +58,11 @@ const MyNewPage = () => {
               <td className="whitespace-nowrap px-6 py-4">{item.roleName}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.roleDescription}</td>
               <td className="whitespace-nowrap px-6 py-4 flex justify-center">
-              <img onClick={() => {setRole(item); setShowModalUpdate(true);}} className='w-5 h-5 cursor-pointer' src="/image/pen.png" alt="" />
-            <img onClick={() =>{setRole(item); setShow(true)}} className='w-5 h-5 cursor-pointer ml-3' src="/image/trash.png" alt="" />
+                <div className='flex justify-center'>
+                  <img onClick={() => {setRole(item); setShowModalUpdate(true);}} className='w-5 h-5 cursor-pointer' src="/image/penIcon.png" alt="" />
+                  <img onClick={() =>{setRole(item); setShow(true)}} className='w-5 h-5 cursor-pointer ml-3' src="/image/trash.png" alt="" />
+                </div>
+              
               </td>
             </tr>
         ))}

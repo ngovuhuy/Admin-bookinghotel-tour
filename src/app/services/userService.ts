@@ -16,7 +16,7 @@ export const useUsers = () => {
 
 export const toggleUserStatus = async (userId: number): Promise<void> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/UserAPI/ToggleUser`, {
+    const response = await fetch(`${BASE_URL}/toggleUserStatus`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain, */*',
