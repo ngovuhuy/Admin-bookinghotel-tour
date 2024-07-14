@@ -7,7 +7,7 @@ import tourService, {
   toggleTourStatus,
 } from "@/app/services/tourService";
 import Link from "next/link";
-import useSWR, { mutate } from "../../../../node_modules/swr/dist/core/index";
+import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
 import "../../../../public/css/tour.css";
 import { ITour } from "@/app/entitis/tour";
@@ -17,19 +17,34 @@ const TourList = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTour, setSelectedTour] = useState<ITour | null>(null);
   const [tour, setTour] = useState<ITour | null>(null);
-  const [showTourCreate, setShowTourCreate] = useState<boolean>(false);
-  const [showTourUpdate, setShowTourUpdate] = useState<boolean>(false);
   const [showTourDetail, setShowTourDetail] = useState<boolean>(false);
-
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: tourList, error } = useSWR("tourList", () =>
+  const { data: tourList = [], error } = useSWR("tourList", () =>
     tourService.getTours()
   );
+  const [filteredTourList, setFilteredTourList] = useState<ITour[]>(tourList);
+
+  useEffect(() => {
+    if (tourList) {
+      const filteredTours = tourList.filter((tour: ITour) => {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        return (
+          tour.tourName?.toLowerCase().includes(lowerCaseQuery) ||
+          tour.tourId?.toString().toLowerCase().includes(lowerCaseQuery)
+        );
+      });
+      setFilteredTourList(filteredTours);
+      setCurrentPage(1);
+    }
+  }, [searchQuery, tourList]);
+
   const handleImageClick = (tour: ITour) => {
     setSelectedTour(tour);
     setShowPopup(true);
   };
+
   const handleClosePopup = () => {
     setShowPopup(false);
     setSelectedTour(null);
@@ -37,9 +52,6 @@ const TourList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [toursPerPage] = useState(5);
-  if (!tourList) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error loading tours</div>;
@@ -47,10 +59,10 @@ const TourList = () => {
 
   const indexOfLastTour = currentPage * toursPerPage;
   const indexOfFirstTour = indexOfLastTour - toursPerPage;
-  const currentTours = tourList.slice(indexOfFirstTour, indexOfLastTour);
+  const currentTours = filteredTourList.slice(indexOfFirstTour, indexOfLastTour);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(tourList.length / toursPerPage);
+  const totalPages = Math.ceil(filteredTourList.length / toursPerPage);
   const toggleStatus = async (tourId: number) => {
     setLoading(true);
     try {
@@ -65,6 +77,7 @@ const TourList = () => {
       setLoading(false);
     }
   };
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -76,14 +89,17 @@ const TourList = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+
   return (
     <div className="relative">
-      <div className="search-add ">
+      <div className="search-add">
         <div className="search-hotel flex">
           <input
             type="text"
             placeholder="Search........."
             className="input-hotel pl-3"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <img src="/image/search.png" alt="" />
         </div>
@@ -187,12 +203,11 @@ const TourList = () => {
                                       : "/image/lock.png"
                                   }
                                   alt={item.status ? "Ban" : "Unban"}
-                                  // onClick={() => handleDeleteTour(item.tourId)}
                                 />
                               </div>
 
                               {showPopup &&
-                                selectedTour?.tourId == item.tourId && (
+                                selectedTour?.tourId === item.tourId && (
                                   <div className="fixed inset-0 z-10 flex items-center justify-center ">
                                     {/* Nền mờ */}
                                     <div className="fixed inset-0 bg-black opacity-50"></div>
@@ -202,7 +217,7 @@ const TourList = () => {
                                       <p className="color-black font-bold text-2xl">
                                         Do you want to{" "}
                                         {item.status ? "lock" : "unlock"} this{" "}
-                                        {item.tourName} ?
+                                        {item.tourName}?
                                       </p>
                                       <div className="button-kichhoat pt-4">
                                         <button
@@ -232,7 +247,9 @@ const TourList = () => {
                         <td
                           colSpan={9}
                           className="text-center py-4 text-red-600 font-bold"
-                        ></td>
+                        >
+                          No tours found
+                        </td>
                       </tr>
                     )}
                   </tbody>

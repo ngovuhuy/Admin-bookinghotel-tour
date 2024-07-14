@@ -2,7 +2,7 @@
 // my-new-page.js
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "../../../../public/css/user.css";
 import {
@@ -13,12 +13,8 @@ import {
 import CreateSupplier from "@/app/components/Suppliers/CreateUser";
 import Link from "next/link";
 
-const fetcher = async (url: string) => {
-  const res = await fetch(url);
-  return res.json();
-};
 
-const MyNewPage = () => {
+const ManageSupplier = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<ISupplier | null>(
     null
@@ -27,20 +23,42 @@ const MyNewPage = () => {
   const { suppliers, error } = useSuppliers();
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [suppliersPerPages] = useState(5);
+  const [suppliersPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredSuppliers, setFilteredSuppliers] = useState<ISupplier[]>(suppliers || []);
+
+  useEffect(() => {
+    if (suppliers) {
+      const filtered = suppliers.filter((supplier: ISupplier) => {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        return (
+          supplier.supplierName?.toLowerCase().includes(lowerCaseQuery) ||
+          supplier.email?.toLowerCase().includes(lowerCaseQuery) ||
+          supplier.phone?.toLowerCase().includes(lowerCaseQuery) ||
+          supplier.supplierId?.toString().includes(lowerCaseQuery) ||
+          // supplier.roleId.toString().includes(lowerCaseQuery) ||
+          (supplier.status ? "unbanned" : "banned").includes(lowerCaseQuery) ||
+          (supplier.isVerify ? "true" : "false").includes(lowerCaseQuery)
+        );
+      });
+      setFilteredSuppliers(filtered);
+      setCurrentPage(1); // Reset to the first page when search query changes
+    }
+  }, [searchQuery, suppliers]);
+
   if (error) return <div>Failed to load</div>;
   if (!suppliers) return <div>Loading...</div>;
 
-  const indexOfLastSupplier = currentPage * suppliersPerPages;
-  const indexOfFirstSupplier = indexOfLastSupplier - suppliersPerPages;
-  const currentSuppliers = suppliers.slice(
+  const indexOfLastSupplier = currentPage * suppliersPerPage;
+  const indexOfFirstSupplier = indexOfLastSupplier - suppliersPerPage;
+  const currentSuppliers = filteredSuppliers.slice(
     indexOfFirstSupplier,
     indexOfLastSupplier
   );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(suppliers.length / suppliersPerPages);
-  // Function để mở modal
+  const totalPages = Math.ceil(filteredSuppliers.length / suppliersPerPage);
+
   const handleImageClick = (supplier: ISupplier) => {
     setSelectedSupplier(supplier);
     setShowPopup(true);
@@ -71,6 +89,7 @@ const MyNewPage = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+
   return (
     <div className="relative">
       <div className="search-add ">
@@ -79,6 +98,8 @@ const MyNewPage = () => {
             type="text"
             placeholder="Search........."
             className="input-hotel pl-3"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <img src="/image/search.png" alt="" />
         </div>
@@ -127,98 +148,109 @@ const MyNewPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentSuppliers.map((item: ISupplier) => (
-                      <tr
-                        key={item.supplierId}
-                        className="border-b border-neutral-200 dark:border-white/10 text-center font-semibold"
-                      >
-                        <td className="whitespace-nowrap px-6 py-4 font-medium">
-                          {item.supplierId}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {item.supplierName}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {item.email}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {item.phone}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 flex justify-center">
-                          <Link
-                            href={`/manage/supplier/supplier_staff/${item.supplierId}`}
-                            className=""
+                    {currentSuppliers.length > 0 ? (
+                      currentSuppliers.map((item: ISupplier) => (
+                        <tr
+                          key={item.supplierId}
+                          className="border-b border-neutral-200 dark:border-white/10 text-center font-semibold"
+                        >
+                          <td className="whitespace-nowrap px-6 py-4 font-medium">
+                            {item.supplierId}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.supplierName}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.email}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.phone}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 flex justify-center">
+                            <Link
+                              href={`/manage/supplier/supplier_staff/${item.supplierId}`}
+                              className=""
+                            >
+                              <img
+                                className="w-5"
+                                src="/image/viewdetail.png"
+                                alt="View Detail"
+                              />
+                            </Link>
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-6 py-4 ${
+                              item.status ? "color-active" : "color-stop"
+                            }`}
                           >
+                            {item.status ? "Unbanned" : "Banned"}
+                          </td>
+                          <td
+                            className={`whitespace-nowrap px-6 py-4 ${
+                              item.isVerify ? "color-active" : "color-stop"
+                            }`}
+                          >
+                            {item.isVerify ? "True" : "False"}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.roleId}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 flex">
                             <img
-                              className="w-5"
-                              src="/image/viewdetail.png"
-                              alt="View Detail"
+                              onClick={() => handleImageClick(item)}
+                              className="w-5 h-5 cursor-pointer ml-2"
+                              src={
+                                item.status
+                                  ? "/image/unlock.png"
+                                  : "/image/lock.png"
+                              }
+                              alt={item.status ? "Ban" : "Unban"}
                             />
-                          </Link>
-                        </td>
-                        <td
-                          className={`whitespace-nowrap px-6 py-4 ${
-                            item.status ? "color-active" : "color-stop"
-                          }`}
-                        >
-                          {item.status ? "Unbanned" : "Banned"}
-                        </td>
-                        <td
-                          className={`whitespace-nowrap px-6 py-4 ${
-                            item.isVerify ? "color-active" : "color-stop"
-                          }`}
-                        >
-                          {item.isVerify ? "True" : "False"}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {item.roleId}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 flex">
-                          <img
-                            onClick={() => handleImageClick(item)}
-                            className="w-5 h-5 cursor-pointer ml-2"
-                            src={
-                              item.status
-                                ? "/image/unlock.png"
-                                : "/image/lock.png"
-                            }
-                            alt={item.status ? "Ban" : "Unban"}
-                          />
-                          {showPopup &&
-                            selectedSupplier?.supplierId == item.supplierId && (
-                              <div className="fixed inset-0 z-10 flex items-center justify-center ">
-                                {/* Nền mờ */}
-                                <div className="fixed inset-0 bg-black opacity-50"></div>
+                            {showPopup &&
+                              selectedSupplier?.supplierId == item.supplierId && (
+                                <div className="fixed inset-0 z-10 flex items-center justify-center ">
+                                  {/* Nền mờ */}
+                                  <div className="fixed inset-0 bg-black opacity-50"></div>
 
-                                {/* Nội dung của popup */}
-                                <div className="relative bg-white p-8 rounded-lg">
-                                  <p className="color-black font-bold text-2xl">
-                                    Do you want to{" "}
-                                    {item.status ? "lock" : "unlock"} this{" "}
-                                    {item.supplierName} ?
-                                  </p>
-                                  <div className="button-kichhoat pt-4">
-                                    <button
-                                      className="button-exit mr-2"
-                                      onClick={() => setShowPopup(false)}
-                                    >
-                                      Exit
-                                    </button>
-                                    <button
-                                      className="button-yes"
-                                      onClick={() =>
-                                        toggleStatus(item.supplierId)
-                                      }
-                                    >
-                                      Yes
-                                    </button>
+                                  {/* Nội dung của popup */}
+                                  <div className="relative bg-white p-8 rounded-lg">
+                                    <p className="color-black font-bold text-2xl">
+                                      Do you want to{" "}
+                                      {item.status ? "lock" : "unlock"} this{" "}
+                                      {item.supplierName} ?
+                                    </p>
+                                    <div className="button-kichhoat pt-4">
+                                      <button
+                                        className="button-exit mr-2"
+                                        onClick={() => setShowPopup(false)}
+                                      >
+                                        Exit
+                                      </button>
+                                      <button
+                                        className="button-yes"
+                                        onClick={() =>
+                                          toggleStatus(item.supplierId)
+                                        }
+                                      >
+                                        Yes
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={9}
+                          className="text-center py-4 text-red-600 font-bold"
+                        >
+                          No suppliers found
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
                 <div className="pagination mt-4 flex justify-between items-center font-semibold">
@@ -267,4 +299,4 @@ const MyNewPage = () => {
   );
 };
 
-export default MyNewPage;
+export default ManageSupplier;

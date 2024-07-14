@@ -1,14 +1,14 @@
 "use client";
 import DetailHotel from "@/app/components/Hotel/DetailHotel";
 import hotelService from "@/app/services/hotelService";
-import { useUsers } from "@/app/services/userService";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
+import Link from "next/link";
 /* eslint-disable @next/next/no-img-element */
 const ManageHotel = () => {
   const [hotelList, setHotelList] = useState([]);
+  const [filteredHotelList, setFilteredHotelList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showHotelCreate, setShowHotelCreate] = useState<boolean>(false);
@@ -25,8 +25,8 @@ const ManageHotel = () => {
   const [imageLoadErrors, setImageLoadErrors] = useState<{
     [key: number]: boolean;
   }>({});
-
   const [loadingPage, setLoadingPage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleImageError = (hotelId: number) => {
     setImageLoadErrors((prevErrors) => ({ ...prevErrors, [hotelId]: true }));
@@ -53,6 +53,7 @@ const ManageHotel = () => {
         setShowPopup(false);
         await hotelService.getHotelList().then((data: any) => {
           setHotelList(data);
+          setFilteredHotelList(data);
           setLoading(false);
         });
 
@@ -76,6 +77,7 @@ const ManageHotel = () => {
       .getHotelList()
       .then((data: any) => {
         setHotelList(data);
+        setFilteredHotelList(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -92,6 +94,7 @@ const ManageHotel = () => {
       .getHotelList()
       .then(async (data: any) => {
         setHotelList(data);
+        setFilteredHotelList(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -101,7 +104,6 @@ const ManageHotel = () => {
       });
   };
 
-  //reload sau khi add
   const handleCreateHotel = async () => {
     setShowHotelCreate(false);
 
@@ -109,6 +111,7 @@ const ManageHotel = () => {
       .getHotelList()
       .then((data: any) => {
         setHotelList(data);
+        setFilteredHotelList(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -123,6 +126,7 @@ const ManageHotel = () => {
       .getHotelList()
       .then((data: any) => {
         setHotelList(data);
+        setFilteredHotelList(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -132,8 +136,18 @@ const ManageHotel = () => {
       });
   };
 
-  //delete image from firebase
-  //Delete
+  useEffect(() => {
+    const filteredHotels = hotelList.filter((hotel: IHotel) => {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      return (
+        hotel.hotelName?.toLowerCase().includes(lowerCaseQuery) ||
+        hotel.hotelId?.toString().toLowerCase().includes(lowerCaseQuery)
+      );
+    });
+    setFilteredHotelList(filteredHotels);
+    setCurrentPage(1); // Reset to the first page when search query changes
+  }, [searchQuery, hotelList]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -144,10 +158,13 @@ const ManageHotel = () => {
 
   const indexOfLastHotel = currentPage * hotelPerPage;
   const indexOfFirstHotel = indexOfLastHotel - hotelPerPage;
-  const currentHotel = hotelList.slice(indexOfFirstHotel, indexOfLastHotel);
+  const currentHotel = filteredHotelList.slice(
+    indexOfFirstHotel,
+    indexOfLastHotel
+  );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(hotelList.length / hotelPerPage);
+  const totalPages = Math.ceil(filteredHotelList.length / hotelPerPage);
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -159,6 +176,7 @@ const ManageHotel = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+
   return (
     <div className="relative">
       <div className="search-add ">
@@ -167,8 +185,9 @@ const ManageHotel = () => {
             type="text"
             placeholder="Search........."
             className="input-hotel pl-3"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <img src="/image/search.png" alt="" />
         </div>
       </div>
       <div className="table-hotel pt-8">
@@ -226,7 +245,10 @@ const ManageHotel = () => {
                             {item.isVerify ? "Active" : "Stopped"}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            <Link className="flex justify-center" href={`/manage/orderHotel/${item.supplierId}`}>
+                            <Link
+                              className="flex justify-center"
+                              href={`/manage/orderHotel/${item.supplierId}`}
+                            >
                               <img
                                 className="w-5"
                                 src="/image/viewdetail.png"

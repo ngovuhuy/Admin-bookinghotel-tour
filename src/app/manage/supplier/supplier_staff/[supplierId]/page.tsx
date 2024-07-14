@@ -1,23 +1,23 @@
-"use client";
 /* eslint-disable @next/next/no-img-element */
+"use client";
+
 import supplierStaffService, {
   toggleSupplierStaffStatus,
 } from "@/app/services/supplierStaffService";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import "../../../../../../public/css/user.css";
+
 const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedStaff, setSelectedSupplierStaff] =
-    useState<ISupplierStaff | null>(null);
-
-  //const supplierId = localStorage.getItem("supplierId");
-
+  const [selectedStaff, setSelectedSupplierStaff] = useState<ISupplierStaff | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [staffPerPage] = useState(5);
-  // Sử dụng useSWR để lấy danh sách nhân viên với key phù hợp
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredStaff, setFilteredStaff] = useState<ISupplierStaff[]>([]);
+
   const {
     data: supplierStaffList,
     error,
@@ -30,6 +30,23 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
     }
   );
 
+  useEffect(() => {
+    if (supplierStaffList) {
+      const filtered = supplierStaffList.filter((staff: ISupplierStaff) => {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        return (
+          (staff.staffName?.toLowerCase().includes(lowerCaseQuery) || false) ||
+          (staff.staffEmail?.toLowerCase().includes(lowerCaseQuery) || false) ||
+          (staff.staffPhoneNumber?.toLowerCase().includes(lowerCaseQuery) || false) ||
+          (staff.staffAddress?.toLowerCase().includes(lowerCaseQuery) || false) ||
+          staff.staffId.toString().includes(lowerCaseQuery)
+        );
+      });
+      setFilteredStaff(filtered);
+      setCurrentPage(1); // Reset to the first page when search query changes
+    }
+  }, [searchQuery, supplierStaffList]);
+
   const handleImageClick = (supplierStaff: ISupplierStaff) => {
     setSelectedSupplierStaff(supplierStaff);
     setShowPopup(true);
@@ -39,6 +56,7 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
     setShowPopup(false);
     setSelectedSupplierStaff(null);
   };
+
   const toggleSupplierStaff = async (staffId: number) => {
     try {
       await toggleSupplierStaffStatus(staffId);
@@ -58,15 +76,14 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
   if (error) {
     return <div>Error loading supplier staff</div>;
   }
+
   const indexOfLastStaff = currentPage * staffPerPage;
   const indexOfFirstStaff = indexOfLastStaff - staffPerPage;
-  const currentStaff = supplierStaffList.slice(
-    indexOfFirstStaff,
-    indexOfLastStaff
-  );
+  const currentStaff = filteredStaff.slice(indexOfFirstStaff, indexOfLastStaff);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(supplierStaffList.length / staffPerPage);
+  const totalPages = Math.ceil(filteredStaff.length / staffPerPage);
+  
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -78,6 +95,7 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
       setCurrentPage(currentPage + 1);
     }
   };
+
   return (
     <div className="relative">
       <div className="search-add">
@@ -86,6 +104,8 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
             type="text"
             placeholder="Search........."
             className="input-hotel pl-3"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <img src="/image/search.png" alt="Search" />
         </div>
@@ -204,7 +224,7 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
                           colSpan={9}
                           className="text-center py-4 text-red-600 font-bold"
                         >
-                          No staffs found
+                          No staff found
                         </td>
                       </tr>
                     )}
@@ -250,4 +270,5 @@ const ManageStaff = ({ params }: { params: { supplierId: string } }) => {
     </div>
   );
 };
+
 export default ManageStaff;
