@@ -195,9 +195,6 @@ const ManageHotel = () => {
                         Manage Room Order
                       </th>
                       <th scope="col" className="px-6 py-4">
-                        Manage Tour Order
-                      </th>
-                      <th scope="col" className="px-6 py-4">
                         View Detail
                       </th>
                       <th scope="col" className="px-6 py-4">
@@ -234,15 +231,6 @@ const ManageHotel = () => {
                                 className="w-5"
                                 src="/image/viewdetail.png"
                                 alt="View Order hotel"
-                              />
-                            </Link>
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4">
-                            <Link className="flex justify-center" href={`/manage/orderTour/${item.supplierId}`}>
-                              <img
-                                className="w-5"
-                                src="/image/viewdetail.png"
-                                alt="View Order Tour"
                               />
                             </Link>
                           </td>

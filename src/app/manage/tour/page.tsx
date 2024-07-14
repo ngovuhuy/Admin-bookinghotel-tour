@@ -13,31 +13,30 @@ import "../../../../public/css/tour.css";
 import { ITour } from "@/app/entitis/tour";
 import DetailTour from "@/app/components/Tour/DetailTour";
 
-  const TourList = () => {
-    const [showPopup, setShowPopup] = useState(false); 
-    const [selectedTour, setSelectedTour] = useState<ITour | null>(null);
-    const [tour,setTour] = useState<ITour | null>(null);
-    const [showTourCreate, setShowTourCreate] = useState<boolean>(false);
-    const [showTourUpdate, setShowTourUpdate] = useState<boolean>(false);
-    const [showTourDetail, setShowTourDetail] = useState<boolean>(false);
-    
-    const [loading, setLoading] = useState(false);
+const TourList = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedTour, setSelectedTour] = useState<ITour | null>(null);
+  const [tour, setTour] = useState<ITour | null>(null);
+  const [showTourCreate, setShowTourCreate] = useState<boolean>(false);
+  const [showTourUpdate, setShowTourUpdate] = useState<boolean>(false);
+  const [showTourDetail, setShowTourDetail] = useState<boolean>(false);
 
-    const { data: tourList, error } = useSWR(
-      "tourList",
-      () => tourService.getTours()
-    );
-    const handleImageClick = (tour: ITour) => {
-      setSelectedTour(tour);
-      setShowPopup(true);
-    };
-    const handleClosePopup = () => {
-      setShowPopup(false);
-      setSelectedTour(null);
-    };
+  const [loading, setLoading] = useState(false);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [toursPerPage] = useState(5);
+  const { data: tourList, error } = useSWR("tourList", () =>
+    tourService.getTours()
+  );
+  const handleImageClick = (tour: ITour) => {
+    setSelectedTour(tour);
+    setShowPopup(true);
+  };
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setSelectedTour(null);
+  };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [toursPerPage] = useState(5);
   if (!tourList) {
     return <div>Loading...</div>;
   }
@@ -50,16 +49,16 @@ import DetailTour from "@/app/components/Tour/DetailTour";
   const indexOfFirstTour = indexOfLastTour - toursPerPage;
   const currentTours = tourList.slice(indexOfFirstTour, indexOfLastTour);
 
-  const paginate = (pageNumber:number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   const totalPages = Math.ceil(tourList.length / toursPerPage);
-  const toggleStatus = async (tourId:number) => {
+  const toggleStatus = async (tourId: number) => {
     setLoading(true);
     try {
       await toggleTourStatus(tourId);
       setShowPopup(false);
       mutate("tourList");
       toast.success("Success");
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error.message);
       toast.error("Failed to toggle tour status");
     } finally {
@@ -106,7 +105,9 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                       <th scope="col" className="px-6 py-4">
                         Tour Time
                       </th>
-                
+                      <th scope="col" className="px-6 py-4">
+                        Manage Tour Order
+                      </th>
                       <th scope="col" className="px-6 py-4 text-center">
                         View Detail
                       </th>
@@ -119,7 +120,7 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                     </tr>
                   </thead>
                   <tbody>
-                  {currentTours.length > 0 ? (
+                    {currentTours.length > 0 ? (
                       currentTours.map((item, index) => {
                         const tourTimeDate = new Date(item.tourTime);
                         const formattedTourTime =
@@ -143,9 +144,20 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                             <td className="whitespace-nowrap px-6 py-4 font-semibold text-black">
                               {formattedTourTime}
                             </td>
-                           
+                            <td className="whitespace-nowrap px-6 py-4">
+                              <Link
+                                className="flex justify-center"
+                                href={`/manage/orderTour/${item.supplierId}`}
+                              >
+                                <img
+                                  className="w-5"
+                                  src="/image/viewdetail.png"
+                                  alt="View Order Tour"
+                                />
+                              </Link>
+                            </td>
                             <td className="whitespace-nowrap px-6 py-4 flex justify-center">
-                              <Link href="#" className=''>
+                              <Link href="#" className="">
                                 <img
                                   onClick={() => {
                                     setTour(item);
@@ -157,7 +169,7 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                                 />
                               </Link>
                             </td>
-                            <td 
+                            <td
                               className={`whitespace-nowrap px-6 py-4 ${
                                 item.status ? "color-active" : "color-stop"
                               }`}
@@ -165,54 +177,52 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                               {item.status ? "Active" : "Stopped"}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 flex justify-center">
-                            <div className="">
+                              <div className="">
                                 <img
-                                    className="w-5 h-5 cursor-pointer ml-3"
-                                    onClick={() => handleImageClick(item)}
-                                    src={
+                                  className="w-5 h-5 cursor-pointer ml-3"
+                                  onClick={() => handleImageClick(item)}
+                                  src={
                                     item.status
-                                        ? "/image/unlock.png"
-                                        : "/image/lock.png"
-                                    }
-                                    alt={item.status ? "Ban" : "Unban"}
-                                    // onClick={() => handleDeleteTour(item.tourId)}
+                                      ? "/image/unlock.png"
+                                      : "/image/lock.png"
+                                  }
+                                  alt={item.status ? "Ban" : "Unban"}
+                                  // onClick={() => handleDeleteTour(item.tourId)}
                                 />
-                            </div>
-                               
-                           
-                              
-                            {showPopup &&
-                            selectedTour?.tourId == item.tourId && (
-                              <div className="fixed inset-0 z-10 flex items-center justify-center ">
-                                {/* Nền mờ */}
-                                <div className="fixed inset-0 bg-black opacity-50"></div>
-
-                                {/* Nội dung của popup */}
-                                <div className="relative bg-white p-8 rounded-lg">
-                                  <p className="color-black font-bold text-2xl">
-                                    Do you want to{" "}
-                                    {item.status ? "lock" : "unlock"} this{" "}
-                                    {item.tourName} ?
-                                  </p>
-                                  <div className="button-kichhoat pt-4">
-                                    <button
-                                      className="button-exit mr-2"
-                                      onClick={() => setShowPopup(false)}
-                                    >
-                                      Exit
-                                    </button>
-                                    <button
-                                      className="button-yes"
-                                      onClick={() =>
-                                        toggleStatus(item.tourId)
-                                      }
-                                    >
-                                      Yes
-                                    </button>
-                                  </div>
-                                </div>
                               </div>
-                            )}
+
+                              {showPopup &&
+                                selectedTour?.tourId == item.tourId && (
+                                  <div className="fixed inset-0 z-10 flex items-center justify-center ">
+                                    {/* Nền mờ */}
+                                    <div className="fixed inset-0 bg-black opacity-50"></div>
+
+                                    {/* Nội dung của popup */}
+                                    <div className="relative bg-white p-8 rounded-lg">
+                                      <p className="color-black font-bold text-2xl">
+                                        Do you want to{" "}
+                                        {item.status ? "lock" : "unlock"} this{" "}
+                                        {item.tourName} ?
+                                      </p>
+                                      <div className="button-kichhoat pt-4">
+                                        <button
+                                          className="button-exit mr-2"
+                                          onClick={() => setShowPopup(false)}
+                                        >
+                                          Exit
+                                        </button>
+                                        <button
+                                          className="button-yes"
+                                          onClick={() =>
+                                            toggleStatus(item.tourId)
+                                          }
+                                        >
+                                          Yes
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
                             </td>
                           </tr>
                         );
@@ -229,23 +239,36 @@ import DetailTour from "@/app/components/Tour/DetailTour";
                 </table>
                 <div className="pagination mt-4 flex justify-between items-center font-semibold">
                   <div>
-                    <span className="ml-8">{currentPage} of {totalPages}</span>
+                    <span className="ml-8">
+                      {currentPage} of {totalPages}
+                    </span>
                   </div>
                   <div className="flex items-center mr-8">
-                    <img className="w-3 h-3 cursor-pointer" src="/image/left.png" alt="Previous" onClick={handlePrevPage} />
+                    <img
+                      className="w-3 h-3 cursor-pointer"
+                      src="/image/left.png"
+                      alt="Previous"
+                      onClick={handlePrevPage}
+                    />
                     {Array.from({ length: totalPages }, (_, index) => (
                       <p
                         key={index}
                         onClick={() => paginate(index + 1)}
-                        className={`mb-0 mx-2 cursor-pointer ${currentPage === index + 1 ? 'active' : ''}`}
+                        className={`mb-0 mx-2 cursor-pointer ${
+                          currentPage === index + 1 ? "active" : ""
+                        }`}
                       >
                         {index + 1}
                       </p>
                     ))}
-                    <img className="w-3 h-3 cursor-pointer" src="/image/right2.png" alt="Next" onClick={handleNextPage} />
+                    <img
+                      className="w-3 h-3 cursor-pointer"
+                      src="/image/right2.png"
+                      alt="Next"
+                      onClick={handleNextPage}
+                    />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
