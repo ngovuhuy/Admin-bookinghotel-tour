@@ -12,7 +12,8 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.17",
-    "@mui/material": "^5.15.17",
+    "@mui/material": "^5.16.4",
+    "@mui/x-charts": "^7.10.0",
     "bootstrap": "^5.3.3",
     "country-cities": "^1.0.8",
     "js-cookie": "^3.0.5",
@@ -22,7 +23,8 @@
     "react-dom": "^18",
     "react-icons": "^5.2.1",
     "react-toastify": "9.1.3",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
