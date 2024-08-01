@@ -193,7 +193,7 @@ const DashBoard = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex align-items-center">
+                  {/* <div className="d-flex align-items-center">
                     <div>
                       <p className="mb-0 text-secondary">Banned</p>
                       <h4 className="my-1 text-info">
@@ -202,7 +202,7 @@ const DashBoard = () => {
                           : "No user yet..."}
                       </h4>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -223,14 +223,14 @@ const DashBoard = () => {
                     </div>
                   </div>
 
-                  <div className="d-flex align-items-center">
+                  {/* <div className="d-flex align-items-center">
                     <div>
                       <p className="mb-0 text-secondary">Banned</p>
                       <h4 className="my-1 text-danger">
                         {countSuppBanned !== null ? countSuppBanned : 0}
                       </h4>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -239,7 +239,7 @@ const DashBoard = () => {
                 <div className="card-body">
                   <div className="d-flex align-items-center">
                     <div>
-                      <p className="mb-0 text-secondary">Total Order Room</p>
+                      <p className="mb-0 text-secondary">Total Order Hotel</p>
                       <h4 className="my-1 text-success">
                         {countBookRoom !== null ? countBookRoom : 0}
                       </h4>
@@ -321,7 +321,7 @@ const DashBoard = () => {
             <h1 style={{ marginBottom: "5px", color: "red" }}>
               Report Revenue
             </h1>
-            <Table2 />
+            <Table2 setTable2={setTable2} />
           </div>
         </div>
       </div>

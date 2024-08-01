@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import dashBoardService from "@/app/services/dashBoardService";
 import * as XLSX from "xlsx";
 
-const Table2 = () => {
+const Table2 = ({ setTable2 }) => {
   const [loading, setLoading] = useState(true);
   const [reportSupplier, setReportSupplier] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -197,7 +197,7 @@ const Table2 = () => {
     }
   }, []);
 
-  const exportToExcel = () => {
+  const getExcelData = () => {
     const title = `Report for ${
       timeRange === "month"
         ? "Current Month"
@@ -218,20 +218,22 @@ const Table2 = () => {
       ],
     ];
 
-    const rows = filteredSuppliers.map((supplier) => [
-      supplier.supplierName || "N/A",
-      supplier.commission || 0,
-      supplier.totalRevenue || 0,
-      supplier.totalRevenueAfterFee || 0,
-      supplier.commissionFeeReceived || 0,
-      supplier.status ? "Active" : "Inactive",
-    ]);
-    const totalCommissionFeeReceived = filteredSuppliers.reduce(
-      (total, supplier) => total + (supplier.commissionFeeReceived || 0),
-      0
-    );
-
-    // Add the total row with a specific CSS class
+    const rows = Array.isArray(filteredSuppliers)
+      ? filteredSuppliers.map((supplier) => [
+          supplier.supplierName || "N/A",
+          supplier.commission || 0,
+          `$${(supplier.totalRevenue || 0).toLocaleString()}`,
+          `$${(supplier.totalRevenueAfterFee || 0).toLocaleString()}`,
+          `$${(supplier.commissionFeeReceived || 0).toLocaleString()}`,
+          supplier.status ? "Active" : "Inactive",
+        ])
+      : [];
+    const totalCommissionFeeReceived = Array.isArray(filteredSuppliers)
+      ? filteredSuppliers.reduce(
+          (total, supplier) => total + (supplier.commissionFeeReceived || 0),
+          0
+        )
+      : 0;
     rows.push([
       {
         v: "Total Revenue",
@@ -241,18 +243,26 @@ const Table2 = () => {
       null,
       null,
       {
-        v: totalCommissionFeeReceived,
-        f: `$${totalCommissionFeeReceived.toLocaleString()}`,
+        v: `$${totalCommissionFeeReceived.toLocaleString()}`,
         p: { className: "highlight-total" },
       },
       null,
     ]);
+    return { headers, rows };
+  };
 
+  const exportToExcel = () => {
+    const { headers, rows } = getExcelData();
     const ws = XLSX.utils.aoa_to_sheet([...headers, ...rows]);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Report Revenue Admin");
-    XLSX.writeFile(wb, "ReportRevenueAdmin.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "Report Admin");
+    XLSX.writeFile(wb, "ReportAdmin.xlsx");
   };
+
+  useEffect(() => {
+    const { headers, rows } = getExcelData();
+    setTable2([...headers, ...rows]);
+  }, [filteredSuppliers, timeRange, startDate, endDate]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
