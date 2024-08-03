@@ -82,7 +82,7 @@ const NavSupplier = () => {
                 </span>
               </Link>
             </li>
-            <li className="flex items-center pb-6 ">
+            {/* <li className="flex items-center pb-6 ">
               <Link
                 className={`flex no-underline  nav-i-hover py-2 pl-3 pr-16 ${
                   pathname === "/manage/role" ? "active-link" : ""
@@ -94,7 +94,7 @@ const NavSupplier = () => {
                   Manage Roles
                 </span>
               </Link>
-            </li>
+            </li> */}
             <li className="flex items-center">
               <Link
                 className={`flex no-underline  nav-i-hover py-2 pl-3 pr-16 ${

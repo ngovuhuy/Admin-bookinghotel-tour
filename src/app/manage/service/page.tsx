@@ -105,7 +105,9 @@ const MyNewPage = () => {
                           {item.serviceDescription}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          {item.serviceImage}
+                          <div className="flex justify-center">
+                            <img className="w-6" src={item.serviceImage} alt={item.serviceDescription} />
+                          </div>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           <div className="flex justify-center">

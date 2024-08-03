@@ -52,10 +52,10 @@ const HeaderSupplier: React.FC<HeaderSupplierProps> = ({ title }) => {
       />
       <span className='ml-4 color-black font-semibold text-2xl'>{currentTitle}</span>
 
-      <div className='icon-user flex items-center'>
+      {/* <div className='icon-user flex items-center'>
         <img className='h-5 w-5 mr-3 cursor-pointer' src='/image/bell.png' alt='Bell Icon' />
         <img className='h-10 w-10 cursor-pointer' src='/image/usersupplier.png' alt='User Icon' />
-      </div>
+      </div> */}
       {isDivVisible && (
         <div className='pc-none' >
           <header className='nav-supllier-mobi'>
@@ -83,12 +83,12 @@ const HeaderSupplier: React.FC<HeaderSupplierProps> = ({ title }) => {
                     <span className='text-white ml-2 text-xl font-semibold'>Supplier</span>
                   </Link>
                 </li>
-                <li className='flex items-center pb-6'>
+                {/* <li className='flex items-center pb-6'>
                   <Link className='flex no-underline nav-i-hover py-2 pl-3 pr-40' href='/manage/role'>
                     <img className='w-7 h-7' src='/image/home.png' alt='Role' />
                     <span className='text-white ml-2 text-xl font-semibold'>Role</span>
                   </Link>
-                </li>
+                </li> */}
                 <li className='flex items-center pb-6'>
                   <Link className='flex no-underline nav-i-hover py-2 pl-3 pr-40' href='/supplier/room'>
                     <img className='w-7 h-7' src='/image/home.png' alt='Hotel' />

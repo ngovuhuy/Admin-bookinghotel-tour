@@ -187,16 +187,14 @@ const OrderHotel = ({ params }: { params: { supplierId: string } }) => {
                               </div>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 flex">
-                              <img
-                                onClick={() => handleImageClick(header)}
-                                className="w-5 h-5 cursor-pointer ml-2"
-                                src={
-                                  header.completed
-                                    ? "/image/unlock.png"
-                                    : "/image/lock.png"
-                                }
-                                alt={header.completed ? "Ban" : "Unban"}
-                              />
+                            {header.completed === false && (
+                                <img
+                                  onClick={() => handleImageClick(header)}
+                                  className="w-5 h-5 cursor-pointer ml-2"
+                                  src="/image/greenTick.png"
+                                  alt="Ban"
+                                />
+                              )}
                               {showPopup &&
                                 selectedOrderHotelHeader?.id == header.id && (
                                   <div className="fixed inset-0 z-10 flex items-center justify-center ">
@@ -207,8 +205,8 @@ const OrderHotel = ({ params }: { params: { supplierId: string } }) => {
                                     <div className="relative bg-white p-8 rounded-lg">
                                       <p className="color-black font-bold text-2xl">
                                         Do you want to{" "}
-                                        {header.completed ? "lock" : "unlock"}{" "}
-                                        this {header.id} ?
+                                        {header.completed ? "confirm" : "confirm"}{" "}
+                                        this order {header.id} ?
                                       </p>
                                       <div className="button-kichhoat pt-4">
                                         <button
