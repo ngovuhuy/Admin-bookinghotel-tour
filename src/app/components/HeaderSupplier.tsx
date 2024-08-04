@@ -15,10 +15,19 @@ const HeaderSupplier: React.FC<HeaderSupplierProps> = ({ title }) => {
     setDivVisible(!isDivVisible);
   };
   let currentTitle = title;
-  if (pathname === '/manager/supplier') {
+  if (pathname === '/manage/supplier') {
     currentTitle = 'Supplier';
   } else if (pathname === '/manage/role') {
     currentTitle = 'Roles';
+  }
+  else if (pathname === '/manage/dashboard') {
+    currentTitle = 'Dashboard';
+  }
+  else if (pathname === '/manage/hotel') {
+    currentTitle = 'Hotel';
+  }
+  else if (pathname === '/manage/tour') {
+    currentTitle = 'Tour';
   }
   else if (pathname === '/manage/user') {
     currentTitle = 'User';

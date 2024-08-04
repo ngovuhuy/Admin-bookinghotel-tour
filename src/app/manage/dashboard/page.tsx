@@ -159,7 +159,7 @@ const DashBoard = () => {
         rel="stylesheet"
       />
       <div className="relative">
-        <div className="table-hotel max-[768px]:w-100 pt-8">
+        <div className="table-hotel max-[768px]:w-100 ">
           <button
             onClick={exportToExcel}
             style={{

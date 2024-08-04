@@ -62,10 +62,9 @@
 .nav-supllier-mobi{
     display: none;
 }
-
     .table-hotel{
         position: absolute;
-        top: 200px;
+        top: 175px;
         width: 71%;
         left: 400px;
     }
