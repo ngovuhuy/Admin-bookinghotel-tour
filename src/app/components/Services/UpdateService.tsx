@@ -59,7 +59,7 @@ const handleCloseModal = () => {
 
 <Modal show={showServiceUpdate} onHide={() => handleCloseModal()} size='lg'>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Service</Modal.Title>
+          <Modal.Title>Update Service</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>

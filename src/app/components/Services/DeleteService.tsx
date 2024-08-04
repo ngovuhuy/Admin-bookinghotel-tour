@@ -57,7 +57,7 @@ const handleCloseModal = () => {
     <>
 
 
-<Modal show={showService} onHide={() => handleCloseModal()} size='lg'>
+<Modal className="pt-44" show={showService} onHide={() => handleCloseModal()} size='lg'>
         <Modal.Header closeButton>
           <Modal.Title>Delete Service</Modal.Title>
         </Modal.Header>
@@ -65,27 +65,16 @@ const handleCloseModal = () => {
         <Form>
 
 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-  <Form.Label>Service Id</Form.Label>
-  <Form.Control readOnly 
-type="number" 
-placeholder="Please enter product price !!!" 
-value={serviceId} 
-onChange={(e:any) => setServiceId(parseInt(e.target.value))}
-/>
-</Form.Group>
-<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-  <Form.Label>Service Name</Form.Label>
-  <Form.Control  type="text"  value={serviceName} onChange={(e:any) => setServiceName(e.target.value)}/>
+  <Form.Label>Do you want delete <span className='text-red-500'>{serviceName}</span> Service </Form.Label>
+ 
 </Form.Group>
 
 </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleCloseModal()}>
-            Close
-          </Button>
+          
           <Button variant="primary" onClick={() => handleSubmit()}>
-            Update
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
