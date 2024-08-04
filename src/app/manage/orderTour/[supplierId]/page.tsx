@@ -24,6 +24,9 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
   const [selectedOrderTourHeader, setSelectedOrderTourHeader] = useState<IOrderTourHeader | null>(
     null
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(orderTourHeaders.length / itemsPerPage);
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const fetcher = async () => {
@@ -69,7 +72,26 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
     }
   };
   const { data, error } = useSWR("orderTourData", fetcher);
-  console.log(data);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const currentHeaders = orderTourHeaders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   if (error) return <div>Error loading data</div>;
   if (!data) return <div>Loading...</div>;
   const { headers, details } = data;
@@ -123,8 +145,8 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {orderTourHeaders.filter(header => header.process == "Paid").length > 0 ? (
-                      orderTourHeaders.filter(header => header.process == "Paid").map((header) => {
+                    {currentHeaders.filter(header => header.process == "Paid").length > 0 ? (
+                      currentHeaders.filter(header => header.process == "Paid").map((header) => {
                         const detail = details[header.id] || [];
                         const tourOrderDate = new Date(header.tourOrderDate);
                         const formattedTourOrderDate =
@@ -238,6 +260,24 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
                     )}
                   </tbody>
                 </table>
+                <div className="pagination mt-4 flex justify-between items-center font-semibold">
+                    <div>
+                      <span className="ml-8">{currentPage} of {totalPages}</span>
+                    </div>
+                    <div className="flex items-center mr-8">
+                      <img className="w-3 h-3 cursor-pointer" src="/image/left.png" alt="Previous" onClick={handlePrevPage} />
+                      {Array.from({ length: totalPages }, (_, index) => (
+                        <p
+                          key={index}
+                          onClick={() => paginate(index + 1)}
+                          className={`mb-0 mx-2 cursor-pointer ${currentPage === index + 1 ? 'active' : ''}`}
+                        >
+                          {index + 1}
+                        </p>
+                      ))}
+                      <img className="w-3 h-3 cursor-pointer" src="/image/right2.png" alt="Next" onClick={handleNextPage} />
+                    </div>
+                  </div>
                 {/* <UpdateTourOrder
                       showModalEditTourOrder={showModalEdit}
                       setShowModalEditTourOrder={setShowModalEdit}
