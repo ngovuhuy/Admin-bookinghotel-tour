@@ -8,4 +8,5 @@ interface ISupplier{
     status: boolean;
     isVerify: boolean;
     roleId: number;
+    commission: number;
 }

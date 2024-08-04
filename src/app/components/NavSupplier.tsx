@@ -25,11 +25,18 @@ const NavSupplier = () => {
         <div className="list-choose pt-10 px-4 pb-14">
           <ul className="pl-0">
             <div className="py-2">
-              <li className="flex items-center pb-6 pl-3">
+              <li className="flex items-center pb-2">
+              <Link
+                className={`flex no-underline  nav-i-hover py-2 pl-3 pr-16 ${
+                  pathname === "/manage/dashboard" ? "active-link" : ""
+                } `}
+                href="/manage/dashboard"
+              >
                 <img className="w-7 h-7 " src="/image/darhboard.png" alt="" />
                 <span className="text-white ml-2 text-xl font-semibold">
                   Dashboard
                 </span>
+              </Link>
               </li>
             </div>
             <li className="flex items-center pb-6 ">

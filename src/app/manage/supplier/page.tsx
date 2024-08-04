@@ -134,6 +134,9 @@ const ManageSupplier = () => {
                         Manage Supplier Staff
                       </th>
                       <th scope="col" className="px-6 py-4">
+                        Commission
+                      </th>
+                      <th scope="col" className="px-6 py-4">
                         Status
                       </th>
                       <th scope="col" className="px-6 py-4">
@@ -177,6 +180,9 @@ const ManageSupplier = () => {
                                 alt="View Detail"
                               />
                             </Link>
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.commission} % for each order
                           </td>
                           <td
                             className={`whitespace-nowrap px-6 py-4 ${
