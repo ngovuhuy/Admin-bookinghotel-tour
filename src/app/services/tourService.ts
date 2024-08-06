@@ -27,7 +27,7 @@ export const toggleTourStatus = async (tourId: number): Promise<void> => {
 export const tourService: ITourService = {
   async getTours() {
     try {
-      const response = await fetch(`${BASE_URL}/getTours`, {
+      const response = await fetch(`${BASE_URL}/getToursAdmin`, {
         headers: {
           "Content-Type": "application/json",
         },

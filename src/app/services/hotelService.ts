@@ -13,11 +13,28 @@ interface IHotelService {
   recoverHotelDeleted(hotelId: number): Promise<IHotel>;
   // Other methods if needed
 }
+export const toggleHotelStatus = async (hotelId: number): Promise<void> => {
+  try {
+    const response = await fetch(`${BASE_URL}/toggleHotelStatus`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ hotelId })
+    });
 
+    if (!response.ok) {
+      throw new Error('Failed to toggle hotel status');
+    }
+  } catch (error: any) {
+    throw new Error('Failed to toggle hotel status: ' + error.message);
+  }
+};
 const hotelService: IHotelService = {
   async getHotelList() {
     try {
-      const response = await fetch(`${BASE_URL}/getHotels`);
+      const response = await fetch(`${BASE_URL}/getHotelsAdmin`);
       if (!response.ok) {
         throw new Error("Failed to fetch hotel list");
       }

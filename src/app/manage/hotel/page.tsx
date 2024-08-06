@@ -1,10 +1,11 @@
 "use client";
 import DetailHotel from "@/app/components/Hotel/DetailHotel";
-import hotelService from "@/app/services/hotelService";
+import hotelService, { toggleHotelStatus } from "@/app/services/hotelService";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { mutate } from "../../../../node_modules/swr/dist/core/index";
 /* eslint-disable @next/next/no-img-element */
 const ManageHotel = () => {
   const [hotelList, setHotelList] = useState([]);
@@ -39,39 +40,8 @@ const ManageHotel = () => {
     setShowPopup(false);
     setSelectedHotel(null);
   };
-
-  const handleLockUnlockHotel = async (hotelId: number, isVerify: boolean) => {
-    setLoadingPage(true);
-    try {
-      let response;
-      if (isVerify) {
-        response = await hotelService.deleteHotel(hotelId);
-      } else {
-        response = await hotelService.recoverHotelDeleted(hotelId);
-      }
-      if (response) {
-        setShowPopup(false);
-        await hotelService.getHotelList().then((data: any) => {
-          setHotelList(data);
-          setFilteredHotelList(data);
-          setLoading(false);
-        });
-
-        toast.success(`Hotel ${isVerify ? "locked" : "unlocked"} successfully`);
-      } else {
-        throw new Error(`Failed to ${isVerify ? "lock" : "unlock"} hotel`);
-      }
-    } catch (error) {
-      console.error(
-        `Error ${isVerify ? "locking" : "unlocking"} hotel:`,
-        error
-      );
-      toast.error(`Failed to ${isVerify ? "lock" : "unlock"} hotel`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+ 
+  
   useEffect(() => {
     hotelService
       .getHotelList()
@@ -86,6 +56,39 @@ const ManageHotel = () => {
         setLoading(false);
       });
   }, []);
+  const loadHotelList = () => {
+    setLoading(true);
+    hotelService
+      .getHotelList()
+      .then((data: any) => {
+        setHotelList(data);
+        setFilteredHotelList(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching hotel list:", error);
+        setError(error);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadHotelList();
+  }, []);
+  const toggleStatus = async (hotelId: number) => {
+    setLoading(true);
+    try {
+      await toggleHotelStatus(hotelId);
+      setShowPopup(false);
+      toast.success("Success");
+      loadHotelList(); // Load lại danh sách sau khi thay đổi trạng thái
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error("Failed to toggle hotel  status");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleHotelAvatar = async () => {
     setShowHotelAvatar(false);
@@ -278,8 +281,8 @@ const ManageHotel = () => {
                                   onClick={() => handleImageClick(item)}
                                   src={
                                     item.isVerify
-                                      ? "/image/lock.png"
-                                      : "/image/unlock.png"
+                                      ? "/image/unlock.png"
+                                      : "/image/lock.png"
                                   }
                                   alt={item.isVerify ? "Ban" : "Unban"}
                                 />
@@ -314,10 +317,7 @@ const ManageHotel = () => {
                                       <Button
                                         className="button-yes"
                                         onClick={() =>
-                                          handleLockUnlockHotel(
-                                            item.hotelId,
-                                            item.isVerify
-                                          )
+                                          toggleStatus(item.hotelId)
                                         }
                                         style={{
                                           background: "#305A61",
