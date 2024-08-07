@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import useSWR, { mutate } from 'swr';
 import { BASE_URL } from './hotelService';
 // Assuming apiService.js is in the same directory
@@ -6,7 +7,58 @@ const fetcher = async (url: string) => {
   const res = await fetch(url);
   return res.json();
 };
+interface ILoginResult {
+  success: boolean;
+  token?: string;
+  role?: string;
+  errorMessage?: string;
+}
+interface ILoginRequest {
+  email: string;
+  password: string;
+}
 
+interface ILoginResponse {
+  roleName: string;
+  userName: string;
+}
+const userService: IAuthenticateService = {
+  async loginAdmin(email: string, password: string): Promise<ILoginResult> {
+    try {
+      const response = await fetch(`${BASE_URL}/loginAdmin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password } as ILoginRequest),
+      });
+
+      if (response.ok) {
+        const data: ILoginResponse = await response.json();
+        const userName = data.userName;
+        const roleName = data.roleName;
+        // Save token to local storage or cookies for future requests
+        
+        Cookies.set("userName", userName, { expires: 7 });
+        Cookies.set("roleName", roleName, { expires: 7 });
+        return { success: true };
+      } else {
+        const errorData = await response.json();
+        return { success: false, errorMessage: errorData.errorMessage };
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      return {
+        success: false,
+        errorMessage: "The email or password is wrong!",
+      };
+    }
+  },
+}
+
+interface IAuthenticateService {
+  loginAdmin(email: string, password: string): Promise<ILoginResult>;
+}
 export const revalidateUsers = () => mutate(`${BASE_URL}/getUsers`);
 
 export const useUsers = () => {
@@ -64,5 +116,7 @@ export const createUser = async (
   }
 };
 
+
 // Function to trigger the data revalidation
 export const revalidateServices = () => mutate(`${BASE_URL}/getServices`);
+export default userService;

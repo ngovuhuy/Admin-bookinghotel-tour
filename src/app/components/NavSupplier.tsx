@@ -10,7 +10,8 @@ const NavSupplier = () => {
   const router = useRouter();
   const handleLogout = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    Cookies.remove("adminEmail");
+    Cookies.remove("roleName");
+    Cookies.remove("userName");
     toast.success("Logout successful");
     router.push("/login");
   };

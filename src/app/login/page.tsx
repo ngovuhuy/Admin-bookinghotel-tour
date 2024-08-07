@@ -1,12 +1,13 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
-import { Suspense, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import "../../../public/css/authen.css";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import userService from "../services/userService";
 
 function LoginAdmin() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ function LoginAdmin() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isPassword, setIsPassword] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(""); // Success message state
   const router = useRouter();
   useEffect(() => {
     const message = searchParams.get("message");
@@ -26,13 +28,19 @@ function LoginAdmin() {
 
 
   
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (email === "admin@gmail.com" && password === "admin") {
-      Cookies.set("adminEmail", email, { expires: 1 });
-      router.push("/manage");
+
+    const result = await userService.loginAdmin(email, password);
+
+    if (result.success) {
+      setSuccessMessage("Login successful! Redirecting...");
+      setErrorMessage(""); // Clear any previous error message
+      const redirectUrl = searchParams.get("redirect") || "/manage";
+        router.push(decodeURIComponent(redirectUrl)); // Chuyển hướng đến URL đã lưu trữ hoặc trang chủ nếu không có URL
     } else {
-      setErrorMessage("Invalid email or password");
+      setSuccessMessage(""); // Clear any previous success message
+      setErrorMessage(result.errorMessage || "Account or password is incorrect.");
     }
   };
 
