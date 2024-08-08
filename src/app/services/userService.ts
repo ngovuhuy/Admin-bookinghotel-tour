@@ -23,37 +23,39 @@ interface ILoginResponse {
   userName: string;
 }
 const userService: IAuthenticateService = {
-  async loginAdmin(email: string, password: string): Promise<ILoginResult> {
-    try {
-      const response = await fetch(`${BASE_URL}/loginAdmin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password } as ILoginRequest),
-      });
+async loginAdmin(email: string, password: string): Promise<ILoginResult> {
+  try {
+    const response = await fetch(`${BASE_URL}/loginAdmin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password } as ILoginRequest),
+    });
 
-      if (response.ok) {
-        const data: ILoginResponse = await response.json();
-        const userName = data.userName;
-        const roleName = data.roleName;
-        // Save token to local storage or cookies for future requests
-        
-        Cookies.set("userName", userName, { expires: 7 });
-        Cookies.set("roleName", roleName, { expires: 7 });
-        return { success: true };
-      } else {
-        const errorData = await response.json();
-        return { success: false, errorMessage: errorData.errorMessage };
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      return {
-        success: false,
-        errorMessage: "The email or password is wrong!",
-      };
+    if (response.ok) {
+      const data: ILoginResponse = await response.json();
+      const userName = data.userName;
+      const roleName = data.roleName;
+      // Save token to local storage or cookies for future requests
+      
+      Cookies.set("userName", userName, { expires: 7 });
+      Cookies.set("roleName", roleName, { expires: 7 });
+      return { success: true };
+    } else {
+      // Handle non-JSON error response
+      const errorText = await response.text();
+      console.error("Non-JSON Error Response:", errorText);
+      return { success: false, errorMessage: "Failed to login: " + errorText };
     }
-  },
+  } catch (error) {
+    console.error("Error:", error);
+    return {
+      success: false,
+      errorMessage: "An error occurred while logging in.",
+    };
+  }
+}
 }
 
 interface IAuthenticateService {
