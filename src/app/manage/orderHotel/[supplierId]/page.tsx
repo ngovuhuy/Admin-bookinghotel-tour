@@ -148,8 +148,8 @@ const OrderHotel = ({ params }: { params: { supplierId: string } }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentHeaders.filter(header => header.process == "Paid").length > 0 ? (
-                      currentHeaders.filter(header => header.process == "Paid").map((header) => {
+                    {currentHeaders.filter(header => header.process == "Success").length > 0 ? (
+                      currentHeaders.filter(header => header.process == "Success").map((header) => {
                         const detail = details[header.id] || [];
                         const checkInDate = new Date(header.checkInDate);
                         const checkOutDate = new Date(header.checkOutDate);
@@ -187,7 +187,7 @@ const OrderHotel = ({ params }: { params: { supplierId: string } }) => {
                                 header.process ? "color-active" : "color-stop"
                               }`}
                             >
-                              {header.process ? "Paid" : "Pending..."}
+                              {header.process ? "Success" : "Pending..."}
                             </td>
                             <td
                               className={`whitespace-nowrap px-6 py-4 ${

@@ -145,8 +145,8 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentHeaders.filter(header => header.process == "Paid").length > 0 ? (
-                      currentHeaders.filter(header => header.process == "Paid").map((header) => {
+                    {currentHeaders.filter(header => header.process == "Success").length > 0 ? (
+                      currentHeaders.filter(header => header.process == "Success").map((header) => {
                         const detail = details[header.id] || [];
                         const tourOrderDate = new Date(header.tourOrderDate);
                         const formattedTourOrderDate =
@@ -180,7 +180,7 @@ const OrderTour = ({ params }: { params: { supplierId: string } }) => {
                                 header.process ? "color-active" : "color-stop"
                               }`}
                             >
-                              {header.process ? "Paid" : "Pending..."}
+                              {header.process ? "Success" : "Pending..."}
                             </td>
                             <td
                               className={`whitespace-nowrap px-6 py-4 ${
