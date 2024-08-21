@@ -36,7 +36,7 @@ function LoginAdmin() {
     if (result.success) {
       setSuccessMessage("Login successful! Redirecting...");
       setErrorMessage(""); // Clear any previous error message
-      const redirectUrl = searchParams.get("redirect") || "/manage";
+      const redirectUrl = searchParams.get("redirect") || "/manage/dashboard";
         router.push(decodeURIComponent(redirectUrl)); // Chuyển hướng đến URL đã lưu trữ hoặc trang chủ nếu không có URL
     } else {
       setSuccessMessage(""); // Clear any previous success message
